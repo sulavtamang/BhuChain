@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BhuChain Wireframes (Code Generated)</title>
+    <style>
+        :root {
+            --bg-color: #f4f4f4;
+            --wireframe-bg: #ffffff;
+            --stroke-color: #333;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* To simulate sketchiness */
+            --border-style: solid;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .wireframe-container {
+            width: 800px;
+            min-height: 500px;
+            background: var(--wireframe-bg);
+            border: 2px solid var(--stroke-color);
+            box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .wireframe-title {
+            position: absolute;
+            top: -30px;
+            left: 0;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #555;
+            text-transform: uppercase;
+        }
+
+        /* Common Elements */
+        .nav-bar {
+            width: 100%;
+            height: 50px;
+            border-bottom: 2px var(--border-style) var(--stroke-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-weight: 900;
+            font-size: 1.2rem;
+        }
+
+        .wallet-badge {
+            border: 1px solid var(--stroke-color);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            background: #eee;
+            border: 2px solid var(--stroke-color);
+            padding: 8px 16px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #333;
+            color: white;
+        }
+
+        .btn-danger {
+            background: white;
+            color: #d00;
+            border-color: #d00;
+        }
+
+        .btn-success {
+            background: white;
+            color: #080;
+            border-color: #080;
+        }
+
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #777;
+            box-sizing: border-box;
+            background: #fafafa;
+        }
+
+        /* --- Screen 3: Public Search --- */
+        .search-hero {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .result-card {
+            border: 2px dashed #999;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+            display: flex;
+            gap: 20px;
+        }
+
+        .map-placeholder {
+            width: 150px;
+            height: 150px;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #999;
+            color: #777;
+        }
+
+        /* --- Screen 4: Transfer Initiation --- */
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 30px;
+        }
+
+        .label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* --- Screen 5: Officer Dashboard --- */
+        .tab-bar {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            background: #eee;
+        }
+
+        .tab.active {
+            background: white;
+            font-weight: bold;
+            border-top: 3px solid #333;
+        }
+
+        .request-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .request-table th,
+        .request-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .request-table th {
+            background: #f9f9f9;
+        }
+
+        /* --- Screen 6: Verification --- */
+        .split-view {
+            display: flex;
+            gap: 20px;
+            height: 400px;
+        }
+
+        .doc-view {
+            flex: 1;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #999;
+        }
+
+        .checklist-view {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .check-item {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SCREEN 3: PUBLIC LAND SEARCH -->
+    <div class="wireframe-container">
+        <div class="wireframe-title">Wireframe 3: Public Land Search</div>
+
+        <div class="nav-bar">
+            <div class="logo">BhuChain</div>
+            <div>
+                <span style="margin-right: 15px;">Login</span>
+                <span class="btn">Connect Wallet</span>
+            </div>
+        </div>
+
+        <div class="search-hero">
+            <h1>Verify Land Ownership</h1>
+            <p>Enter a Parcel ID to view immutable blockchain records.</p>
+            <div style="max-width: 400px; margin: 20px auto;">
+                <input type="text" class="input-box" placeholder="Parcel ID (e.g. 1024)" value="1024">
+                <button class="btn btn-primary" style="width: 100%">Search Registry</button>
+            </div>
+        </div>
+
+        <div class="result-card">
+            <div class="map-placeholder">[ Land Map ]</div>
+            <div>
+                <h3>Parcel #1024</h3>
+                <p><strong>Location:</strong> Kathmandu, Ward 4</p>
+                <p><strong>Area:</strong> 1200 Sq. Ft</p>
+                <p><strong>Owner:</strong> <span
+                        style="font-family: monospace; background: #eee; padding: 2px;">0x71C...9A23</span></p>
+                <p><strong>Status:</strong> <span
+                        style="background: #dfd; padding: 2px 5px; border: 1px solid #0a0; font-size: 0.8em; color: green;">VERIFIED</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: TRANSFER INITIATION -->
+    <div class="wireframe-container">
+        <div class="wireframe-title">Wireframe 4: Ownership Transfer Form</div>
+
+        <div class="nav-bar">
+            <div class="logo">BhuChain</div>
+            <div class="wallet-badge">My Wallet: 0x71C...9A23</div>
+        </div>
+
+        <h2 style="text-align: center; border-bottom: 1px solid #eee; padding-bottom: 10px;">Transfer Ownership</h2>
+
+        <div class="form-container">
+            <label class="label">Step 1: Select Your Land</label>
+            <select class="input-box">
+                <option>Parcel #1024 (Kathmandu)</option>
+                <option>Parcel #5055 (Lalitpur)</option>
+            </select>
+
+            <label class="label">Step 2: Buyer Details</label>
+            <input type="text" class="input-box" placeholder="Buyer Wallet Address (0x...)" value="0xABC...1234">
+            <input type="number" class="input-box" placeholder="Agreed Price (NPR)" disabled style="background:#eee;">
+
+            <div
+                style="background: #fff3cd; padding: 10px; font-size: 0.9em; margin: 20px 0; border: 1px solid #ffeeba;">
+                ⚠ <strong>Warning:</strong> This action is irreversible once approved.
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%">
+                Sign with MetaMask & Initiate
+            </button>
+            <div style="text-align: center; margin-top: 10px; font-size: 0.8em; color: #777;">
+                (Gas Fee ~0.002 ETH)
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: OFFICER DASHBOARD -->
+    <div class="wireframe-container">
+        <div class="wireframe-title">Wireframe 5: Land Officer Dashboard</div>
+
+        <div class="nav-bar">
+            <div class="logo">BhuChain [ADMIN]</div>
+            <div class="wallet-badge">Officer: 0xADM...9999</div>
+        </div>
+
+        <div class="tab-bar">
+            <div class="tab active">Pending Requests (3)</div>
+            <div class="tab">Transfer History</div>
+            <div class="tab">Register New Land</div>
+        </div>
+
+        <table class="request-table">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Parcel ID</th>
+                    <th>Applicant (Seller)</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Transfer</td>
+                    <td>#1024</td>
+                    <td>0x71C...9A23</td>
+                    <td>2024-12-25</td>
+                    <td><button class="btn">Examine</button></td>
+                </tr>
+                <tr>
+                    <td>Registration</td>
+                    <td>NEW</td>
+                    <td>0x44B...1122</td>
+                    <td>2024-12-26</td>
+                    <td><button class="btn">Examine</button></td>
+                </tr>
+                <tr>
+                    <td>Transfer</td>
+                    <td>#8812</td>
+                    <td>0x991...AA21</td>
+                    <td>2024-12-26</td>
+                    <td><button class="btn">Examine</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- SCREEN 6: VERIFICATION SCREEN -->
+    <div class="wireframe-container">
+        <div class="wireframe-title">Wireframe 6: Application Verification</div>
+
+        <div class="nav-bar">
+            <div class="logo">BhuChain [ADMIN]</div>
+            <button class="btn">← Back to Dashboard</button>
+        </div>
+
+        <h3 style="margin-top: 0;">Examining Transfer Application #305</h3>
+
+        <div class="split-view">
+            <div class="doc-view">
+                <div style="text-align: center; color: #555;">
+                    [ DEED IMAGE VIEWER ]<br>
+                    <small>loaded from /media/sec/deed_1024.pdf</small>
+                    <br><br>
+                    📄
+                </div>
+            </div>
+
+            <div class="checklist-view">
+                <h4>Verification Checklist</h4>
+                <div class="check-item"><input type="checkbox" checked> Seller Identity Verified (KYC)</div>
+                <div class="check-item"><input type="checkbox" checked> Buyer Citizenship Valid</div>
+                <div class="check-item"><input type="checkbox"> <b>Tax Clearance Certificate</b></div>
+                <div class="check-item"><input type="checkbox"> No Existing Disputes</div>
+
+                <hr style="margin: 20px 0;">
+
+                <h4 style="margin-bottom: 10px;">Final Decision</h4>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-danger" style="flex:1">Reject Application</button>
+                    <button class="btn btn-success" style="flex:1">Approve & Execute</button>
+                </div>
+                <p style="font-size: 0.8em; color: #777; margin-top: 10px;">
+                    *Approving triggers the Smart Contract `approveTransfer` function.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
