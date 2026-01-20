@@ -28,4 +28,12 @@ contract BhuChain {
         //We use msg.sender to record WHO is adding the land
         parcels[parcelCount] = LandParcel(parcelCount, _location, _area, msg.sender);
     }
+    //5. Function to transfer land from one address to another
+    function transferOwnership(uint256 _id, address _newOwner) public {
+        //Security: Ensure ONLY the current owner can transfer it
+        require(msg.sender == parcels[_id].owner, "You are not the owner of this parcel");
+
+        //Update the owner in our registry (Digital Filing Cabinet)
+        parcels[_id].owner = _newOwner;
+    }
 }
