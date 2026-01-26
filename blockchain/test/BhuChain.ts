@@ -27,4 +27,20 @@ describe("BhuChain Land Registry", function () {
     // Check if the parcelCount increased to 1
     expect(await bhuChain.parcelCount()).to.equal(1);
   });
+
+  it("Should NOT allow a non-owner to transfer land", async function () {
+  const bhuChain = await deployContract();
+  
+  // 1. Setup: Create 'Owner' and 'Hacker' accounts
+  const [owner, hacker] = await ethers.getSigners();
+  
+  // 2. Add a parcel (Owner adds it, so ID 1 belongs to Owner)
+  await bhuChain.addParcel("Pokhara", 1000);
+  
+  // 3. Attempt Theft: Hacker tries to transfer Parcel #1 to themselves
+  // We expect this to FAIL with our exact error message
+  await expect(
+    bhuChain.connect(hacker).transferOwnership(1, hacker.address)
+  ).to.be.revertedWith("You are not the owner of this parcel");
+});
 });
