@@ -19,6 +19,26 @@ describe("BhuChain Land Registry", function () {
     return { bhuChain, admin, officer, citizen1, citizen2 };
   }
 
+  it("Should emit an event when an Officer is added", async function() {
+    const { bhuChain, officer } = await deployContract();
+    await expect(bhuChain.addOfficer(officer.address)).to.emit(bhuChain, "officerAdded");
+  });
+
+  it("Should emit ParcelRegistered event", async function() {
+    const { bhuChain, officer, citizen1 } = await deployContract();
+    await expect(bhuChain.connect(officer).addParcel(citizen1.address, "Kathmandu", 500)).to.emit(bhuChain, "ParcelRegistered");
+  });
+
+  it("Should emit OwnershipTransferred event", async function () {
+    const { bhuChain, officer, citizen1, citizen2 } = await deployContract();
+    await bhuChain.addOfficer(officer.address);
+    await bhuChain.connect(officer).addParcel(citizen1.address, "KTM", 500);
+    await expect(bhuChain.connect(citizen1).transferOwnership(1, citizen2.address))
+      .to.emit(bhuChain, "OwnershipTransferred")
+      // We check: ID=1, Old=Citizen1, New=Citizen2
+      .withArgs(1, citizen1.address, citizen2.address);
+  });
+
   it("Should set the correct registry name", async function () {
     const { bhuChain } = await deployContract();
     expect(await bhuChain.name()).to.equal("BhuChain Land Registry");
