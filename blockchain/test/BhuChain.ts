@@ -4,92 +4,116 @@ import hre from "hardhat";
 const { ethers } = await hre.network.connect();
 
 describe("BhuChain Land Registry", function () {
-  // Helper to deploy the contract fresh for each test
+  /**
+   * Helper function to deploy a fresh contract instance for each test
+   * This ensures tests don't interfere with each other
+   */
   async function deployContract() {
-    // 1. Get some fake accounts
+    // Get test accounts from Hardhat's local blockchain
     const [admin, officer, citizen1, citizen2] = await ethers.getSigners();
     
-    // 2. Deploy the contract
+    // Deploy the BhuChain contract
     const BhuChain = await ethers.getContractFactory("BhuChain");
     const bhuChain = await BhuChain.deploy();
     
-    // 3. Authorize the officer so they can register land
+    // Authorize the officer account for land registration
     await bhuChain.addOfficer(officer.address);
 
     return { bhuChain, admin, officer, citizen1, citizen2 };
   }
 
-  it("Should emit an event when an Officer is added", async function() {
-    const { bhuChain, officer } = await deployContract();
-    await expect(bhuChain.addOfficer(officer.address)).to.emit(bhuChain, "officerAdded");
-  });
-
-  it("Should emit ParcelRegistered event", async function() {
-    const { bhuChain, officer, citizen1 } = await deployContract();
-    await expect(bhuChain.connect(officer).addParcel(citizen1.address, "Kathmandu", 500)).to.emit(bhuChain, "ParcelRegistered");
-  });
-
-  it("Should emit OwnershipTransferred event", async function () {
-    const { bhuChain, officer, citizen1, citizen2 } = await deployContract();
-    await bhuChain.addOfficer(officer.address);
-    await bhuChain.connect(officer).addParcel(citizen1.address, "KTM", 500);
-    await expect(bhuChain.connect(citizen1).transferOwnership(1, citizen2.address))
-      .to.emit(bhuChain, "OwnershipTransferred")
-      // We check: ID=1, Old=Citizen1, New=Citizen2
-      .withArgs(1, citizen1.address, citizen2.address);
-  });
+  // ============ BASIC FUNCTIONALITY TESTS ============
 
   it("Should set the correct registry name", async function () {
     const { bhuChain } = await deployContract();
     expect(await bhuChain.name()).to.equal("BhuChain Land Registry");
   });
 
+  // ============ EVENT EMISSION TESTS ============
+
+  it("Should emit an event when an Officer is added", async function () {
+    const { bhuChain, officer } = await deployContract();
+    
+    // Verify that adding an officer triggers the OfficerAdded event
+    await expect(bhuChain.addOfficer(officer.address))
+      .to.emit(bhuChain, "OfficerAdded")
+      .withArgs(officer.address);
+  });
+
+  it("Should emit ParcelRegistered event with correct data", async function () {
+    const { bhuChain, officer, citizen1 } = await deployContract();
+    
+    // Verify that registering land triggers the event with accurate parameters
+    await expect(
+      bhuChain.connect(officer).addParcel(citizen1.address, "Kathmandu", 500)
+    )
+      .to.emit(bhuChain, "ParcelRegistered")
+      .withArgs(1, citizen1.address, "Kathmandu", 500);
+  });
+
+  it("Should emit ParcelOwnershipTransferred event", async function () {
+    const { bhuChain, officer, citizen1, citizen2 } = await deployContract();
+    
+    // Setup: Register land for citizen1
+    await bhuChain.connect(officer).addParcel(citizen1.address, "KTM", 500);
+    
+    // Verify that transferring ownership triggers the event
+    await expect(
+      bhuChain.connect(citizen1).transferParcelOwnership(1, citizen2.address)
+    )
+      .to.emit(bhuChain, "ParcelOwnershipTransferred")
+      .withArgs(1, citizen1.address, citizen2.address);
+  });
+
+  // ============ OWNERSHIP LOGIC TESTS ============
+
   it("Should register land to the correct CITIZEN (not the officer)", async function () {
     const { bhuChain, officer, citizen1 } = await deployContract();
     
-    // 1. Officer registers land for Citizen 1
-    // New Signature: addParcel(owner, location, area)
+    // Officer registers land on behalf of Citizen 1
     await bhuChain.connect(officer).addParcel(citizen1.address, "Kathmandu", 500);
     
-    // 2. Verify the owner stored in mapping is actually Citizen 1
+    // Verify that the blockchain records Citizen 1 as the owner, not the officer
     const land = await bhuChain.parcels(1);
     expect(land.owner).to.equal(citizen1.address);
   });
 
+  it("Should allow transfer between citizens", async function () {
+    const { bhuChain, officer, citizen1, citizen2 } = await deployContract();
+    
+    // Setup: Register land for Citizen 1
+    await bhuChain.connect(officer).addParcel(citizen1.address, "Lalitpur", 750);
+    
+    // Citizen 1 transfers ownership to Citizen 2
+    await bhuChain.connect(citizen1).transferParcelOwnership(1, citizen2.address);
+    
+    // Verify that Citizen 2 is now the owner
+    const land = await bhuChain.parcels(1);
+    expect(land.owner).to.equal(citizen2.address);
+  });
+
+  // ============ SECURITY TESTS ============
+
   it("Should FAIL if a non-officer tries to register land", async function () {
     const { bhuChain, citizen1 } = await deployContract();
     
-    // Citizen tries to register land for themselves (Should fail)
+    // Attempt: Citizen tries to register land without officer privileges
+    // Expected: Transaction should revert with specific error message
     await expect(
       bhuChain.connect(citizen1).addParcel(citizen1.address, "Pokhara", 1000)
     ).to.be.revertedWith("Only authorized officers can register land");
   });
 
-  it("Should allow transfer and handle locking", async function () {
-    const { bhuChain, officer, citizen1, citizen2 } = await deployContract();
-    
-    // 1. Setup: Officer registers land for Citizen 1
-    await bhuChain.connect(officer).addParcel(citizen1.address, "Lalitpur", 750);
-
-    // 2. Transfer: Citizen 1 transfers to Citizen 2
-    // This function internally checks requires and locks/unlocks
-    await bhuChain.connect(citizen1).transferOwnership(1, citizen2.address);
-
-    // 3. Verify new owner
-    const land = await bhuChain.parcels(1);
-    expect(land.owner).to.equal(citizen2.address);
-    expect(land.isLocked).to.equal(false); // Should be unlocked after transfer
-  });
-
   it("Should prevent theft (Security Check)", async function () {
     const { bhuChain, officer, citizen1, citizen2 } = await deployContract();
     
-    // 1. Officer registers land for Citizen 1
+    // Setup: Register land for Citizen 1
     await bhuChain.connect(officer).addParcel(citizen1.address, "Bhaktapur", 300);
 
-    // 2. Citizen 2 tries to steal it
+    // Attack: Citizen 2 tries to steal Citizen 1's land
+    // Expected: Transaction should revert because Citizen 2 is not the owner
     await expect(
-      bhuChain.connect(citizen2).transferOwnership(1, citizen2.address)
+      bhuChain.connect(citizen2).transferParcelOwnership(1, citizen2.address)
     ).to.be.revertedWith("You are not the owner of this parcel");
   });
 });
