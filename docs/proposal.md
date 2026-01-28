@@ -155,9 +155,9 @@ It starts when a Seller initiates a transfer on the frontend. After they sign th
 Figure 3.6 Sequence Diagram
 
 
-### 3.3.6. Class Diagram
+### 3.3.6 Class Diagram
 The structure of our code is designed to keep the blockchain logic separate from the web logic.
-On the Blockchain (Solidity): The LandRegistry contract is the brain of the system. It manages the Parcel objects and enforces the rules of the registry. We’ve implemented strict modifiers like onlyAdmin to ensure that only verified officers can register new land, while anyone can use the public getter functions to verify ownership.
+On the Blockchain (Solidity): The LandRegistry contract is the brain of the system, inheriting from OpenZeppelin’s Ownable and ReentrancyGuard for industry-standard security. It manages the Parcel objects and enforces the rules of the registry. We’ve implemented strict access controls where only the Owner (Admin) can authorize Officers, who in turn have the power to register new land parcels on behalf of citizens.
 In the Backend (Python/Django): Our backend code focuses on managing the user experience. The UserProfile class handles the link between a web account and a blockchain wallet. The RegistrationApplication class manages the lifecycle of a request, from "Submitted" to "Mined." Finally, the AdminActionLog class provides a persistent record of administrative behavior. By separating these concerns, we ensure that the system is both secure on the blockchain and responsive on the web.
 
 
@@ -211,7 +211,8 @@ parcel_id	uint256	The unique Token ID acting as the Primary Key
 owner	address	The wallet address of the current legal owner
 location	string	Physical address (District/Ward)
 area	uint256	Square footage of the land
-isLocked	bool	Locking mechanism to prevent double-spending during transfer
+
+Note: The locking mechanism (isLocked concept from Table 3.3) is professionally implemented using OpenZeppelin's nonReentrant modifier to protect against double-spending and reentrancy attacks.
 Authorized Officers List (mapping(address => bool)) 
 We use this mapping to enforce the laws of our system. It acts as a "white-list" of wallet addresses that belong to legitimate government officials. Only addresses that are marked as true in this mapping are allowed to execute the code that registers new land or approves a transfer. This ensures that the decentralized network still respects the authoritative role of the Land Revenue Office.
 Table 3.4 Authorized Officers List
@@ -267,7 +268,7 @@ Figure 3.13 Application Verification Screen Wireframe
 To build a system as sensitive as a land registry, we cannot rely on a single technology; we need a "Hybrid" stack that balances the absolute security of a blockchain with the speed of a modern web application. This selection is based on the following explicit requirement analysis:
 
 1. **Requirement: Immutable Ownership Ledger (Blockchain - Solidity & Ethereum)** 
-For the core "Source of Truth," we chose Solidity on Ethereum. We develop these smart contracts in the Hardhat environment, allowing us to rigorously simulate and test the logic of land transfers in a local sandbox before they ever touch a live network. This ensures that the requirement for a tamper-proof ownership history is mathematically guaranteed and cryptographically secure.
+For the core "Source of Truth," we chose Solidity on Ethereum. We developed these smart contracts using the OpenZeppelin security framework to ensure inheritance of battle-tested access control and reentrancy protection. We used the Hardhat environment to rigorously simulate and test the logic of land transfers in a local sandbox before they ever touch a live network. This ensures that the requirement for a tamper-proof ownership history is mathematically guaranteed and cryptographically secure.
 
 2. **Requirement: Secure Data Management & API Services (Backend - Django & Python)** 
 Supporting the blockchain is a Django backend, selected specifically for its "batteries-included" security model. While the blockchain handles the immutable ledger, Django acts as the secure gatekeeper for the requirement of handling off-chain data like user profiles and document storage, protecting the system against common web vulnerabilities like SQL injection that often plague government portals.
@@ -286,7 +287,7 @@ The architectural integrity of BhuChain is maintained through four primary funct
 ## 4.3. Tools, Platforms, and Languages
 To translate this theoretical framework into a functional prototype, we have assembled a development stack that prioritizes security, speed, and decentralized integrity. The backbone of our system is written in a trio of core languages: **Solidity** for the self-executing smart contracts on the blockchain, **Python** for the robust Django backend, and modern **JavaScript** for the dynamic React-based user interface. This linguistic foundation is enhanced by industrial-strength frameworks, including **React.js** and **Vite** for the frontend, the **Django REST Framework** for our secure internal APIs, and **Ethers.js** to handle the complex communication between the browser and the Ethereum network.
 
-The storage strategy is equally calculated, utilizing **PostgreSQL** to manage the high volume of sensitive off-chain metadata while relying on the **Ethereum State Mapping** as the ultimate, immutable ledger for property records. All development and testing are conducted within the **Hardhat** environment and coded in **Visual Studio Code**, ensuring we can iron out technical hurdles in a simulated network before any real transactions occur. Finally, the entire project lifecycle is managed through **Git** for version control, with **MetaMask** serving as the primary gateway for identity management and cryptographic transaction signing.
+The storage strategy is equally calculated, utilizing **PostgreSQL** to manage the high volume of sensitive off-chain metadata while relying on the **Ethereum State Mapping** as the ultimate, immutable ledger for property records. All development and testing are conducted within the **Hardhat** environment using the **OpenZeppelin** security toolkit, ensuring we can iron out technical hurdles in a simulated network before any real transactions occur. Finally, the entire project lifecycle is managed through **Git** for version control, with **MetaMask** serving as the primary gateway for identity management and cryptographic transaction signing.
 
 ## 4.4. Project Timeline (Gantt Chart)
 Development of BhuChain follows a structured Agile methodology. This framework uses iterative sprints to refine smart contracts, backend logic, and the user interface at the same time. The Gantt chart below shows the specific order and links between each stage of the project.
