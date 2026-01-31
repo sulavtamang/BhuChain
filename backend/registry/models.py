@@ -53,7 +53,6 @@ class RegistrationApplication(models.Model):
     def __str__(self):
         return f"Application #{self.id} - {self.user.full_name} - {self.status}"
 
-
 # ==========================================
 # Admin Action Log (Internal Audit)
 # ==========================================
@@ -67,7 +66,6 @@ class AdminActionLog(models.Model):
     action_type = models.CharField(max_length=50)
     remarks = models.TextField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return f"{self.action_type} - {self.admin.full_name}"
-
-
