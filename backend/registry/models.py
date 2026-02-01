@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 
 # ==========================================
 # Table 3.1: User Profile Table
@@ -14,10 +15,20 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
 
     # 0x.... Ethereum Address
-    wallet_address = models.CharField(max_length=42, unique=True, help_text="Ethereum Wallet Address")
+    wallet_address = models.CharField(
+        max_length=42,
+        unique=True, 
+        help_text="Ethereum Wallet Address", 
+        validators=[RegexValidator(r'^0x[a-fA-F0-9]{40}$', 'Invalid Ethereum Address')]
+    )
 
     #Critical KYC Field
-    citizenship_no = models.CharField(max_length=20, unique=True, help_text="Government Citizenship ID")
+    citizenship_no = models.CharField(
+        max_length=20, 
+        unique=True, 
+        help_text="Government Citizenship ID", 
+        validators=[RegexValidator(r'^[0-9]{10}$', 'Invalid Citizenship Number')]
+    )
 
     full_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True, null=False)
