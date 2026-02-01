@@ -16,3 +16,4 @@ class RegistrationApplicationAdmin(admin.ModelAdmin):
 class AdminActionLogAdmin(admin.ModelAdmin):
     list_display = ('action_type', 'admin', 'timestamp')
     list_filter = ('action_type',)
+    
