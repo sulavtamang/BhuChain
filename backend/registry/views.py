@@ -14,17 +14,17 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_staff:
             return UserProfile.objects.all()
-        return UserProfile.objects.filter(user=user)
+        return UserProfile.objects.filter(user__user=user)
 
 class RegistrationApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = RegistrationApplicationSerializer
-    permission_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         # Security Logic:
-        # Officers see all apps; Citizens see only their own apps
+        # Officers see all applications; Citizens see only their own applications
         user = self.request.user
         if user.is_staff:
             return RegistrationApplication.objects.all()
         # We look up applications where the 'user' (UserProfile) matches the logged-in user
-        return RegistrationApplication.objects.filter(user=user)
+        return RegistrationApplication.objects.filter(user__user=user)
