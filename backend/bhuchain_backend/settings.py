@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'registry', 
     'corsheaders',
     'drf_spectacular',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -155,6 +156,10 @@ REST_FRAMEWORK = {
         'anon' : '10/minute', # Guests: 10 requests per minute
         'user' : '100/minute', # Authenticated Users: 100 requests per minute
     },
+
+    'DEFAULT_FILTER_BACKENDS' : [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
 }
 
 SPECTACULAR_SETTINGS = {

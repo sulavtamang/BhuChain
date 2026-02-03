@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ['role', 'is_verified', 'citizenship_no']
     
     def get_queryset(self):
         # Security Logic:
@@ -19,6 +20,8 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 class RegistrationApplicationViewSet(viewsets.ModelViewSet):
     serializer_class = RegistrationApplicationSerializer
     permission_classes = [IsAuthenticated]
+    filterset_fields = ['status', 'parcel_id']
+
 
     def get_queryset(self):
         # Security Logic:
