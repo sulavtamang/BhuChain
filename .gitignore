@@ -23,3 +23,10 @@ backend/env/
 # Django
 db.sqlite3
 media/
+
+# Frontend build outputs
+dist/
+build/
+
+# Logs
+*.log
