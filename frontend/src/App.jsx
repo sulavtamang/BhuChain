@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute  from "./components/ProtectedRoute";
 import Login from "./pages/Login";
+import LandingPage from "./pages/LandingPage";
 
 // Placehoder Pages
 const Register = () => <div style={{textAlign: 'center', marginTop: '50px'}}><h1>Register Page</h1></div>;
@@ -12,7 +13,7 @@ function App () {
   return (
     <Routes>
       {/* Public Routes */}
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/register" element={<Register />} />
 
       {/* PROTECTED ROUTES (Must be logged in) */}
