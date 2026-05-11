@@ -1,0 +1,52 @@
+# Dependency directories
+node_modules/
+backend/env/
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Solidity / Hardhat
+artifacts/
+cache/
+typechain-types/
+coverage/
+coverage.json
+.openzeppelin/
+.pth
+
+# Django
+db.sqlite3
+media/
+staticfiles/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+out/
